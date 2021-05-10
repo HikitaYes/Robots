@@ -3,6 +3,8 @@ package gui;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.security.Key;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -68,12 +70,12 @@ public class MainApplicationFrame extends JFrame
     
 //    protected JMenuBar createMenuBar() {
 //        JMenuBar menuBar = new JMenuBar();
-// 
+//
 //        //Set up the lone menu.
 //        JMenu menu = new JMenu("Document");
 //        menu.setMnemonic(KeyEvent.VK_D);
 //        menuBar.add(menu);
-// 
+//
 //        //Set up the first menu item.
 //        JMenuItem menuItem = new JMenuItem("New");
 //        menuItem.setMnemonic(KeyEvent.VK_N);
@@ -82,7 +84,7 @@ public class MainApplicationFrame extends JFrame
 //        menuItem.setActionCommand("new");
 ////        menuItem.addActionListener(this);
 //        menu.add(menuItem);
-// 
+//
 //        //Set up the second menu item.
 //        menuItem = new JMenuItem("Quit");
 //        menuItem.setMnemonic(KeyEvent.VK_Q);
@@ -91,7 +93,7 @@ public class MainApplicationFrame extends JFrame
 //        menuItem.setActionCommand("quit");
 ////        menuItem.addActionListener(this);
 //        menu.add(menuItem);
-// 
+//
 //        return menuBar;
 //    }
     
@@ -135,6 +137,23 @@ public class MainApplicationFrame extends JFrame
             testMenu.add(addLogMessageItem);
         }
 
+        JMenu fileMenu = new JMenu("Файл");
+        fileMenu.setMnemonic(KeyEvent.VK_F);
+        fileMenu.getAccessibleContext().setAccessibleDescription(
+                "Выход из приложения");
+
+        {
+            JMenuItem exitItem = new JMenuItem("Выход", KeyEvent.VK_S);
+            exitItem.addActionListener((event) -> {
+                Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
+                        new WindowEvent(this, WindowEvent.WINDOW_CLOSING)
+                );
+            });
+            fileMenu.add(exitItem);
+        }
+
+
+        menuBar.add(fileMenu);
         menuBar.add(lookAndFeelMenu);
         menuBar.add(testMenu);
         return menuBar;
