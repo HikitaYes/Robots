@@ -6,15 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.security.Key;
 
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 
 import log.Logger;
 
@@ -145,9 +137,15 @@ public class MainApplicationFrame extends JFrame
         {
             JMenuItem exitItem = new JMenuItem("Выход", KeyEvent.VK_S);
             exitItem.addActionListener((event) -> {
-                Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
-                        new WindowEvent(this, WindowEvent.WINDOW_CLOSING)
-                );
+                int result = JOptionPane.showConfirmDialog(
+                        this,
+                        "Вы уверены, что хотите выйти?",
+                        "Окно подтверждения",
+                        JOptionPane.YES_NO_OPTION);
+                if (result == JOptionPane.YES_OPTION)
+                    Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
+                            new WindowEvent(this, WindowEvent.WINDOW_CLOSING)
+                    );
             });
             fileMenu.add(exitItem);
         }
