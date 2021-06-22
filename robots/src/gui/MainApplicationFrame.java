@@ -1,7 +1,6 @@
 package gui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -61,57 +60,54 @@ public class MainApplicationFrame extends JFrame
         desktopPane.add(frame);
         frame.setVisible(true);
     }
-    
+
     private JMenuBar generateMenuBar()
     {
         JMenuBar menuBar = new JMenuBar();
-        
-        JMenu lookAndFeelMenu = new JMenu("Режим отображения");
-        lookAndFeelMenu.setMnemonic(KeyEvent.VK_V);
-        lookAndFeelMenu.getAccessibleContext().setAccessibleDescription(
-                "Управление режимом отображения приложения");
 
-        lookAndFeelMenu.add(
-            createMenuItem("Системная схема", (event) -> {
-                setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                this.invalidate();
-        }));
-
-        lookAndFeelMenu.add(
-            createMenuItem("Универсальная схема", (event) -> {
-                setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-                this.invalidate();
-            })
+        JMenu lookAndFeelMenu = createMenu(
+            "Режим отображения",
+            KeyEvent.VK_V,
+            "Управление режимом отображения приложения",
+            new JMenuItem[] {
+                createMenuItem("Системная схема", (event) -> {
+                    setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                    this.invalidate();
+                }),
+                createMenuItem("Универсальная схема", (event) -> {
+                    setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+                    this.invalidate();
+                })
+            }
         );
 
-
-        JMenu testMenu = new JMenu("Тесты");
-        testMenu.setMnemonic(KeyEvent.VK_T);
-        testMenu.getAccessibleContext().setAccessibleDescription(
-                "Тестовые команды");
-
-        testMenu.add(
-          createMenuItem("Сообщение в лог", (event) -> {
-              Logger.debug("Новая строка");
-          })
+        JMenu testMenu = createMenu(
+            "Тесты",
+            KeyEvent.VK_T,
+            "Тестовые команды",
+            new JMenuItem[] {
+                createMenuItem("Сообщение в лог", (event) -> {
+                    Logger.debug("Новая строка");
+                })
+            }
         );
 
-
-        JMenu fileMenu = new JMenu("Файл");
-        fileMenu.setMnemonic(KeyEvent.VK_F);
-        fileMenu.getAccessibleContext().setAccessibleDescription(
-                "Выход из приложения");
-
-        fileMenu.add(
-            createMenuItem("Выход", (event) ->
-                Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
-                    new WindowEvent(this, WindowEvent.WINDOW_CLOSING))
-            )
+        JMenu fileMenu = createMenu(
+            "Файл",
+            KeyEvent.VK_F,
+            "Выход из приложения",
+            new JMenuItem[] {
+                createMenuItem("Выход", (event) -> {
+                    Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
+                        new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                })
+            }
         );
 
-        menuBar.add(fileMenu);
-        menuBar.add(lookAndFeelMenu);
-        menuBar.add(testMenu);
+        JMenu[] menu = {fileMenu, lookAndFeelMenu, testMenu};
+        for (JMenu item : menu) {
+            menuBar.add(item);
+        }
         return menuBar;
     }
 
@@ -119,6 +115,16 @@ public class MainApplicationFrame extends JFrame
         JMenuItem item = new JMenuItem(name, KeyEvent.VK_S);
         item.addActionListener(listener);
         return item;
+    }
+
+    private JMenu createMenu(String name, int key, String description, JMenuItem[] menuItems) {
+        JMenu menu = new JMenu(name);
+        menu.setMnemonic(key);
+        menu.getAccessibleContext().setAccessibleDescription(description);
+        for (JMenuItem item : menuItems) {
+            menu.add(item);
+        }
+        return menu;
     }
 
     private void setLookAndFeel(String className)
