@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.*;
@@ -31,7 +32,6 @@ public class MainApplicationFrame extends JFrame
 
         setContentPane(desktopPane);
         
-        
         LogWindow logWindow = createLogWindow();
         addWindow(logWindow);
 
@@ -40,7 +40,9 @@ public class MainApplicationFrame extends JFrame
         addWindow(gameWindow);
 
         setJMenuBar(generateMenuBar());
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+
+        addCloseEventHandler();
     }
     
     protected LogWindow createLogWindow()
@@ -101,18 +103,10 @@ public class MainApplicationFrame extends JFrame
                 "Выход из приложения");
 
         fileMenu.add(
-            createMenuItem("Выход", (event) -> {
-                int result = JOptionPane.showConfirmDialog(
-                        this,
-                        "Вы уверены, что хотите выйти?",
-                        "Окно подтверждения",
-                        JOptionPane.YES_NO_OPTION);
-
-                if (result == JOptionPane.YES_OPTION) {
-                    Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
-                        new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-                }
-            })
+            createMenuItem("Выход", (event) ->
+                Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
+                    new WindowEvent(this, WindowEvent.WINDOW_CLOSING))
+            )
         );
 
         menuBar.add(fileMenu);
@@ -139,5 +133,23 @@ public class MainApplicationFrame extends JFrame
         {
             // just ignore
         }
+    }
+
+    private void addCloseEventHandler() {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int result = JOptionPane.showConfirmDialog(
+                        e.getWindow(),
+                        "Вы уверены, что хотите выйти?",
+                        "Окно подтверждения",
+                        JOptionPane.YES_NO_OPTION);
+
+                if (result == JOptionPane.YES_OPTION) {
+                    e.getWindow().setVisible(false);
+                    System.exit(0);
+                }
+            }
+        });
     }
 }
