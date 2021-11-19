@@ -13,12 +13,6 @@ import stateSaving.DataSaver;
 import stateSaving.Saveable;
 import stateSaving.SaveableJFrame;
 
-/**
- * Что требуется сделать:
- * 1. Метод создания меню перегружен функционалом и трудно читается. 
- * Следует разделить его на серию более простых методов (или вообще выделить отдельный класс).
- *
- */
 public class MainApplicationFrame extends SaveableJFrame
 {
     private final JDesktopPane desktopPane = new JDesktopPane();
@@ -35,20 +29,27 @@ public class MainApplicationFrame extends SaveableJFrame
 
         setContentPane(desktopPane);
         setName("main");
-        
+
+        var model = new GameModel();
+
         LogWindow logWindow = createLogWindow();
         addWindow(logWindow);
 
-        GameWindow gameWindow = new GameWindow();
+        GameWindow gameWindow = new GameWindow(model);
         gameWindow.setSize(400,  400);
         addWindow(gameWindow);
+
+        InfoWindow infoWindow = new InfoWindow(model);
+        infoWindow.setSize(250,  180);
+        infoWindow.setLocation(410, 0);
+        addWindow(infoWindow);
 
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
         pack();
         setExtendedState(MAXIMIZED_BOTH);
-        windowsToSave = new Saveable[] {logWindow, gameWindow, this};
+        windowsToSave = new Saveable[] {logWindow, infoWindow, gameWindow, this};
         DataSaver.load(windowsToSave);
 
         addCloseEventHandler();
@@ -57,8 +58,7 @@ public class MainApplicationFrame extends SaveableJFrame
     protected LogWindow createLogWindow()
     {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
-        logWindow.setLocation(10,10);
-//        logWindow.setSize(300, 800);
+        logWindow.setLocation(670, 0);
         setMinimumSize(logWindow.getSize());
         logWindow.pack();
         Logger.debug("Протокол работает");
