@@ -10,8 +10,9 @@ import javax.swing.JPanel;
 import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
+import stateSaving.SaveableJInternalFrame;
 
-public class LogWindow extends JInternalFrame implements LogChangeListener
+public class LogWindow extends SaveableJInternalFrame implements LogChangeListener
 {
     private LogWindowSource m_logSource;
     private TextArea m_logContent;
@@ -19,6 +20,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener
     public LogWindow(LogWindowSource logSource) 
     {
         super("Протокол работы", true, true, true, true);
+        this.setName("log");
         m_logSource = logSource;
         m_logSource.registerListener(this);
         m_logContent = new TextArea("");

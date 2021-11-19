@@ -9,6 +9,9 @@ import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 import log.Logger;
+import stateSaving.DataSaver;
+import stateSaving.Saveable;
+import stateSaving.SaveableJFrame;
 
 /**
  * Что требуется сделать:
@@ -16,9 +19,10 @@ import log.Logger;
  * Следует разделить его на серию более простых методов (или вообще выделить отдельный класс).
  *
  */
-public class MainApplicationFrame extends JFrame
+public class MainApplicationFrame extends SaveableJFrame
 {
     private final JDesktopPane desktopPane = new JDesktopPane();
+    private final Saveable[] windowsToSave;
 
     public MainApplicationFrame() {
         //Make the big window be indented 50 pixels from each edge
@@ -26,10 +30,11 @@ public class MainApplicationFrame extends JFrame
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset,
-            screenSize.width  - inset*2,
-            screenSize.height - inset*2);
+            screenSize.width  - inset * 2,
+            screenSize.height - inset * 2);
 
         setContentPane(desktopPane);
+        setName("main");
         
         LogWindow logWindow = createLogWindow();
         addWindow(logWindow);
@@ -41,6 +46,11 @@ public class MainApplicationFrame extends JFrame
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
+        pack();
+        setExtendedState(MAXIMIZED_BOTH);
+        windowsToSave = new Saveable[] {logWindow, gameWindow, this};
+        DataSaver.load(windowsToSave);
+
         addCloseEventHandler();
     }
     
@@ -48,7 +58,7 @@ public class MainApplicationFrame extends JFrame
     {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
         logWindow.setLocation(10,10);
-        logWindow.setSize(300, 800);
+//        logWindow.setSize(300, 800);
         setMinimumSize(logWindow.getSize());
         logWindow.pack();
         Logger.debug("Протокол работает");
@@ -152,6 +162,7 @@ public class MainApplicationFrame extends JFrame
                         JOptionPane.YES_NO_OPTION);
 
                 if (result == JOptionPane.YES_OPTION) {
+                    DataSaver.save(windowsToSave);
                     e.getWindow().setVisible(false);
                     System.exit(0);
                 }
