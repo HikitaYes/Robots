@@ -38,6 +38,8 @@ public class InfoWindow extends SaveableJInternalFrame implements Observer
 
         getContentPane().add(panel);
         pack();
+        setSize(250,  180);
+        setLocation(410, 0);
     }
 
     private void addRow(JPanel panel, String name, Label label) {

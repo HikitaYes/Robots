@@ -19,5 +19,6 @@ public class GameWindow extends SaveableJInternalFrame
         panel.add(m_visualizer, BorderLayout.CENTER);
         getContentPane().add(panel);
         pack();
+        setSize(400,  400);
     }
 }
