@@ -36,12 +36,9 @@ public class MainApplicationFrame extends SaveableJFrame
         addWindow(logWindow);
 
         GameWindow gameWindow = new GameWindow(model);
-        gameWindow.setSize(400,  400);
         addWindow(gameWindow);
 
         InfoWindow infoWindow = new InfoWindow(model);
-        infoWindow.setSize(250,  180);
-        infoWindow.setLocation(410, 0);
         addWindow(infoWindow);
 
         setJMenuBar(generateMenuBar());
