@@ -20,7 +20,7 @@ public class SaveableJFrame extends JFrame implements Saveable {
         var state = new WindowState(
                 getWidth(), getHeight(), getX(), getY(),
                 isIcon, isMaximum, false);
-        DataStoring.store(getName(), state);
+        DataSaver.store(getName(), state);
     }
 
     @Override

@@ -5,13 +5,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DataSaver {
+    private static final Map<String, WindowState> data = new HashMap<>();
+
+    public static void store(String nameWindow, WindowState state) {
+        data.put(nameWindow, state);
+    }
+
     private static final File file = new File(System.getProperty("user.home") + File.separator + "javaRobotsState");
 
     public static void save(Saveable[] windows) {
         for (var window : windows) {
             window.saveState();
         }
-        saveToFile(DataStoring.getData());
+        saveToFile();
     }
 
     public static void load(Saveable[] windows) {
@@ -23,7 +29,7 @@ public class DataSaver {
         }
     }
 
-    public static void saveToFile(Map<String, WindowState> data) {
+    private static void saveToFile() {
         try (ObjectOutputStream stream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
             stream.writeObject(data);
         } catch (IOException e) {
@@ -31,7 +37,7 @@ public class DataSaver {
         }
     }
 
-    public static Map<String, WindowState> loadFromFile() {
+    private static Map<String, WindowState> loadFromFile() {
         if (file.exists()) {
             try (ObjectInputStream stream = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
                 Map<String, WindowState> data = (HashMap<String, WindowState>) stream.readObject();
