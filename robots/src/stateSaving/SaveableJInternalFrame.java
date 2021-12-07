@@ -16,7 +16,7 @@ public class SaveableJInternalFrame extends JInternalFrame implements Saveable
         var state = new WindowState(
                 getWidth(), getHeight(), getX(), getY(),
                 isIcon(), isMaximum(), isClosed());
-        DataStoring.store(getName(), state);
+        DataSaver.store(getName(), state);
     }
 
     @Override
